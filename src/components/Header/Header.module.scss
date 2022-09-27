@@ -1,0 +1,73 @@
+$calm: rgb(43, 43, 221);
+.navbar {
+    padding:25px 0;
+    display: flex;
+    justify-content: space-between;
+    * {
+        font-size: 16px;
+    }
+    a {
+        padding: 10px 15px;
+        border: 1px solid;
+        color:#fff;
+        border-radius: 5px;
+        &:first-child {
+            text-transform: uppercase;
+            font-weight: 700;
+            border-color: rgb(39, 39, 39);
+            background-color: rgb(39, 39, 39);
+        }
+        &:hover {
+            background-color: $calm;
+            border-color: $calm;
+        }
+    }
+    .controls {
+        display: flex;
+        a {
+            font-weight: 400;
+            text-transform: capitalize;
+            margin-left: 15px;
+        }
+        img {
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+        }
+        h2  {
+            margin-right: 10px;
+        }
+        .hollow {
+            border-color: $calm;
+            background-color: transparent;
+            color:$calm;
+            transition: all 0.2s ease-in-out;
+            &:hover {
+                background-color: $calm;
+                color:#fff;
+            }
+        }
+        .calm {
+            border-color: $calm;
+            background-color: $calm;
+            &:hover {
+                border-color: rgb(48, 23, 160);
+                background-color: rgb(48, 23, 160);
+            }
+        }
+        .agressive {
+            margin-left: 15px;
+            padding: 10px 15px;
+            border: 1px solid;
+            color:#fff;
+            border-radius: 5px;
+            border-color:crimson;
+            background-color: crimson;
+            cursor: pointer;
+            &:hover {
+                border-color:rgb(164, 21, 49);
+                background-color: rgb(164, 21, 49);
+            }
+        }
+    }
+}
