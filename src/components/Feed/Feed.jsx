@@ -4,7 +4,7 @@ import Skeleton from '../Post/Skeleton'
  const Feed = ({isLoaded, data, onRemovePost}) => {
   return (
     <div className='posts'>
-      {(!isLoaded ? [...Array(5)] : data).map((item, index)=> {
+      {/* {(!isLoaded ? [...Array(5)] : data).map((item, index)=> {
         return !isLoaded ? (
         <Skeleton />
         ) : (
@@ -14,7 +14,7 @@ import Skeleton from '../Post/Skeleton'
             {...item}
           />
         )
-            })}
+            })} */}
         
     </div>
   )
