@@ -30,7 +30,7 @@ import styles from "./Post.module.scss"
         </>
       ) : (<></>)}
       {!props.imageUrl ? (<></>) : (
-        <img className={styles.coverImg} src={`${process.env.REACT_APP_API_URL}${props.imageUrl}`} />
+        <img className={styles.coverImg} src={`https://${process.env.REACT_APP_API_URL}${props.imageUrl}`} />
       )}
       <div className={styles.user}>
         <img className={styles.avatar} src={props.user.avatarUrl}/>
