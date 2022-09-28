@@ -93,7 +93,7 @@ const AddPost = () => {
                         Убрать фото
                     </Button>
                     <div className={styles.preview}>
-                      <img  src={`${process.env.REACT_APP_API_URL}${imageUrl}`} />
+                      <img  src={`https://${process.env.REACT_APP_API_URL}${imageUrl}`} />
                     </div>
                     <div></div>
                 </>
