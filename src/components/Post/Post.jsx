@@ -54,7 +54,8 @@ import styles from "./Post.module.scss"
           })}
         </div>
         <div className='stats'>
-          <p>{props.viewsCount}</p>
+          <p>👁 {props.viewsCount}</p>
+          <p>🗨 {props.comments.length}</p>
         </div>
         {props.isFullPost && (
           <div className={styles.commentsSection}>
