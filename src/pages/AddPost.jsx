@@ -55,7 +55,7 @@ const AddPost = () => {
       const onSubmitHandler = async () => {
         const fields = {
             title,
-            tags: tags.trim().replace(/[ ]+/g, ' ').split(' '),
+            tags: tags.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
             text,
             imageUrl
         }
