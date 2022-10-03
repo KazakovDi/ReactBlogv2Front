@@ -11,8 +11,14 @@
       }
     }
   }
+  .addBtn {
+    margin-right: 15px !important;
+  }
   .removeBtn {
-    margin-left: 15px !important;
+    padding: 8px 10px !important;
+    @media screen and (max-width: 428px) {
+      margin-top: 10px !important;
+    }
   }
   .image {
     width: 100%;

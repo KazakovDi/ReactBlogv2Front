@@ -84,7 +84,7 @@ const AddPost = () => {
   return (
     <div className="container">
         <Paper style={{ padding: 30 }}>
-            <Button onClick={()=> {inputRef.current.click()}} variant="outlined" size="large">
+            <Button className={styles.addBtn} onClick={()=> {inputRef.current.click()}} variant="outlined" size="large">
                 Загрузить фото
             </Button>
             {imageUrl && (
