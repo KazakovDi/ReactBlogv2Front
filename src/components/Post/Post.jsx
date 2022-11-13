@@ -8,20 +8,21 @@ import Comment from '../Comment/Comment'
 import axios from '../../axios'
 import styles from "./Post.module.scss"
  const Post = (props) => {
+  const commentRef = React.useRef(null)
   const user = useSelector(selectUser)
   const dispatch = useDispatch()
-  const date = new Date(props.user.createdAt)
+  const date = new Date(props.user?.createdAt)
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const [comment, setComment] = React.useState("")
+    // const [comment, setComment] = React.useState("")
     const addComment = async ()=> {
-      await axios.post(`/createComment/${props._id}`, {text:comment})
+      await axios.post(`/createComment/${props._id}`, {text:commentRef.current.value})
       dispatch(fetchSinglePost(props._id))
     }
   return (
     <div className={!props.isFullPost ? `card ${styles.post}` : (`${styles.fullPost}`)}>
       {user ? (
         <>
-          {user?._id === props.user._id ? (
+          {user?._id === props.user?._id ? (
           <div className={styles.controls}>
             <Link to={`/createPost/${props._id}`}>Изменить</Link>
             <button className={styles.rmvBtn} onClick={()=> props.onRemovePost(props._id)}>Удалить</button>
@@ -33,9 +34,9 @@ import styles from "./Post.module.scss"
         <img className={styles.coverImg} src={`https://${process.env.REACT_APP_API_URL}${props.imageUrl}`} />
       )}
       <div className={styles.user}>
-        <img className={styles.avatar} src={props.user.avatarUrl}/>
+        <img className={styles.avatar} src={props.user?.avatarUrl}/>
         <div>
-          <h4>{props.user.fullName}</h4>
+          <h4>{props.user?.fullName}</h4>
           <p>{date.toLocaleDateString('ru-RU', options)}</p>
         </div>
       </div>
@@ -47,26 +48,26 @@ import styles from "./Post.module.scss"
           <ReactMarkdown children={props.text}/>
         )}
         <div className={styles.tags}>
-          {props.tags.map(tag => {
+          {props.tags?.map((tag, index) => {
             return (
-              <p>#{tag.body}</p>
+              <p key={index}>#{tag.body}</p>
             )
           })}
         </div>
         <div className='stats'>
           <p>👁 {props.viewsCount}</p>
-          <p>🗨 {props.comments.length}</p>
+          <p>🗨 {props.comments?.length}</p>
         </div>
         {props.isFullPost && (
           <div className={styles.commentsSection}>
             <div className={styles.newComment}>
-              <textarea rows={4} value={comment} onChange={event => setComment(event.target.value)} placeholder='Оставьте комментарий'/>
+              <textarea rows={4} ref={commentRef} placeholder='Оставьте комментарий'/>
               <button onClick={addComment} type="button">Добавить комментарий</button>
             </div>
             <div className={styles.comments}>
-              {props.comments.map(com=> {
+              {props.comments?.map(com=> {
                 return (
-                  <Comment text={com.text} id={com.user} />
+                  <Comment key={com.user} text={com.text} id={com.user} />
                 )
               })}
             </div>

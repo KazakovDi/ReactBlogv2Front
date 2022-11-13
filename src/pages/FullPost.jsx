@@ -8,15 +8,13 @@ const FullPost = () => {
     const error = useSelector(state=> state.post.error)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const data = useSelector(state => state.post.currentPost)
-    const isLoaded = useSelector(state => Boolean(state.post.currentPost))
+    const data = useSelector(state => state.post.data)
+    const isLoaded = useSelector(state => Boolean(state.post.data))
     const {id} = useParams()
     React.useEffect(()=> {
-            dispatch(clearErrors())
             dispatch(fetchSinglePost(id))
             .then(res=> {
               if("error" in res) {
-                dispatch(setPostError(res.error.message))
               }
             })
     }, [comment])

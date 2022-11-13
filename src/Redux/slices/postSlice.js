@@ -27,50 +27,49 @@ export const fetchDeletePost = createAsyncThunk("post/fetchDeletePost", async pa
     }
     
 })
-export const fetchTags = createAsyncThunk("post/fetchTags", async ()=> {
-    try {
-        const {data} = await axios.get(`/tags`)
-        return data
-    } catch(err) {
-        return Promise.reject(err.response)
-    }
-    
-})
+
 
 const initialState = {
     data: null,
     currentPost: null,
     error: "",
-    status: "loading"
+    status: "loading",
+    filter: {
+        sortProps: "createdAt",
+        searchProps: undefined
+    }
 }
 const postSlice = createSlice({
     name: "post",
     error: null,
     initialState,
     reducers: {
-        setPostError: (state, action)=> {
-            state.error = action.payload
-        },
-        clearErrors: (state, action)=> {
-            state.error = null
+        changeFilterProps: (state, action) => {
+            if(action.payload.sortProps)
+                state.filter.sortProps = action.payload?.sortProps
+            if(action.payload.searchProps || action.payload.searchProps === "")
+                state.filter.searchProps = action.payload.searchProps
         }
     },
     extraReducers: {
         [fetchSinglePost.pending]: state=> {
-            state.currentPost = null
+            state.data = null
             state.status = "loading"
         },
         [fetchSinglePost.fulfilled]: (state, action)=> {
-            state.currentPost = action.payload
+            state.data = action.payload
             state.status = "loaded"
+            state.error = null
         },
         [fetchSinglePost.rejected]: (state, action)=> {
-            state.currentPost = null
+            state.data = null
             state.status = "error"
+            state.error = action.error.message
         },
         [fetchPosts.pending]: state=> {
             state.data = null
             state.status = "loading"
+            state.error = null
         },
         [fetchPosts.fulfilled]: (state, action)=> {
             state.data = action.payload
@@ -79,13 +78,14 @@ const postSlice = createSlice({
         [fetchPosts.rejected]: (state,action)=> {
             state.data = null
             state.status = "error"
+            state.error = action.error.message
         },
         [fetchDeletePost.fulfilled]: (state, action)=> {
             state.data = action.payload
             state.status = "loaded"
         }
     }})
-export const {setPostError, clearErrors} = postSlice.actions
+export const {setPostError, clearErrors, changeFilterProps} = postSlice.actions
 export const selectIsPostLoaded = state => Boolean(state.post.data)
 export const selectPosts = state => state.post.data
 export const postReducer = postSlice.reducer

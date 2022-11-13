@@ -7,7 +7,13 @@ import Register from "./pages/Register";
 import Header from "./components/Header/Header";
 import FullPost from "./pages/FullPost";
 import AddPost from "./pages/AddPost";
+
+import { useSelector } from 'react-redux'
+
 function App() {
+  const error = useSelector(state=> state.post.error)
+  if(error)
+    return <div className='errorBlock'>{error}</div>
   return (
     <>
       <Header />

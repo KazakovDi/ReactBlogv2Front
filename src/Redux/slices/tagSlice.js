@@ -5,14 +5,13 @@ export const fetchTags = createAsyncThunk("post/fetchTags", async ()=> {
         const {data} = await axios.get(`/tags`)
         return data
     } catch(err) {
-        return Promise.reject(err.response)
+        return Promise.reject(err.response.data)
     }
     
 })
-
 const initialState = {
     data: null,
-    error: null,
+    error: "",
     status: "loading"
 }
 const tagSlice = createSlice({
@@ -27,10 +26,12 @@ const tagSlice = createSlice({
         [fetchTags.fulfilled]: (state, action)=> {
             state.data = action.payload
             state.status = "loaded"
+            state.error = null
         },
-        [fetchTags.rejected]: state=> {
+        [fetchTags.rejected]: (state, action)=> {
             state.data = null
             state.status = "error"
+            state.error = action.error.message
         }
     }})
 export const selectIsTagsLoaded = state => Boolean(state.tag.data)

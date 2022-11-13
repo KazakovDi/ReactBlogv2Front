@@ -9,6 +9,15 @@ export const fetchLogin = createAsyncThunk("auth/fetchLogin", async (params, thu
     }
     
 })
+export const fetchUser = createAsyncThunk("auth/fetchUser", async (params)=> {
+    try {
+        const {data} = await axios.get(`/auth/${params.id}`)
+        return data
+    } catch(err) {
+        return Promise.reject(err.response.data)
+    }
+    
+})
 export const fetchAuthMe = createAsyncThunk("auth/fetchAuthMe", async ()=> {
     try {
         const {data} = await axios.get("/auth/me")
@@ -20,7 +29,6 @@ export const fetchAuthMe = createAsyncThunk("auth/fetchAuthMe", async ()=> {
 })
 const initialState = {
     data: null,
-    error: "",
     status: "loading"
 }
 const authSlice = createSlice({
@@ -53,6 +61,18 @@ const authSlice = createSlice({
             state.status = "loaded"
         },
         [fetchAuthMe.rejected]: state=> {
+            state.data = null
+            state.status = "error"
+        },
+        [fetchUser.pending]: state=> {
+            state.data = null
+            state.status = "loading"
+        },
+        [fetchUser.fulfilled]: (state, action)=> {
+            state.data = action.payload
+            state.status = "loaded"
+        },
+        [fetchUser.rejected]: state=> {
             state.data = null
             state.status = "error"
         }

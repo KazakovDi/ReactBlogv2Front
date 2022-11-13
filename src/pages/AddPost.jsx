@@ -6,31 +6,38 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import axios from "../axios"
 import styles from "./AddPost.module.scss"
+
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSinglePost } from '../Redux/slices/postSlice';
 const AddPost = () => {
     const navigate = useNavigate()
     const {id} = useParams()
     const isEditing = Boolean(id)
     const inputRef = React.useRef(null)
-    const [title, setTitle] = React.useState("")
-    const [text, setText] = React.useState("")
-    const [tags, setTags] = React.useState("")
-    const [imageUrl, setImageUrl] = React.useState("")
-    React.useEffect(()=> {
-      if(isEditing) {
-        axios.get(`/posts/${id}`)
-        .then(({data}) => {
-          setTitle(data.title)
-          const newTags = data.tags.map(tag=> {
-            return tag.body
-          })
-          setTags(newTags.join(","))
-          setImageUrl(data.imageUrl)
-          setText(data.text)
-        }).catch(err=> {
-          console.warn(err)
-          alert("Не удалось получить статью")
-        })
+    const [imageUrl, setImageUrl] = React.useState(useSelector(state=> state.post.data?.imageUrl) || "")
+    const isLoaded = useSelector(state=> {
+      if(state.post.data === null || state.post.data === undefined || state.post.data.length > 1)
+        return false
+      return true
+    })
+    console.log("isLoaded", isLoaded)
+    let tags = ""
+    const {title, text} = useSelector(state=> {
+      if(!isLoaded) {
+        return {
+          title:"",
+          text:""
+        }
+      } else {
+          console.log("else", state.post.data)
+          tags = state.post.data.tags.map(tag=> tag.body).join(",")
+          return state.post.data
       }
+    })
+    const dispatch = useDispatch()
+    React.useEffect(()=> {
+      if(isEditing)
+        dispatch(fetchSinglePost(id))
     }, [])
       const options = React.useMemo(
         () => ({
@@ -45,9 +52,6 @@ const AddPost = () => {
         }),
         [],
       );
-      const onChange = React.useCallback((value) => {
-        setText(value)
-      }, []);
       const removeImg = ()=> {
         setImageUrl("")
         inputRef.current.value = ""
@@ -59,6 +63,7 @@ const AddPost = () => {
             text,
             imageUrl
         }
+        console.log(fields)
         try {
           const {data} = isEditing
           ? await axios.patch(`/posts/${id}/edit`, fields)
@@ -99,13 +104,13 @@ const AddPost = () => {
                 </>
             )}
             <div>
-              <input className={styles.titleField} placeholder="Название" onChange={e=> setTitle(e.target.value)} value={title} />
+              <input className={styles.titleField} placeholder="Название"  value={title} />
             </div>
             <div>
-              <input className={styles.tagsField} placeholder="Теги" onChange={e=> setTags(e.target.value)} value={tags}/>
+              <input className={styles.tagsField} placeholder="Теги" value={tags}/>
             </div>
             <input onChange={event=> {uploadImage(event)}} ref={inputRef} type="file" hidden/>
-            <SimpleMDE options={options} onChange={onChange} value={text}  />
+            <SimpleMDE options={options} value={text}  />
             <input onClick={onSubmitHandler} type="submit" value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>

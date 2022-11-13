@@ -38,7 +38,7 @@ import styles from "./Header.module.scss"
   return (
         <div className='container'>
             <div className={styles.navbar}>
-                <Link class={styles.logo}to="/" >Blogged</Link>
+                <Link className={styles.logo}to="/" >Blogged</Link>
                 {!isAuth ? (
                 <div className={styles.controls}>
                     <Link to="/auth/login" className={styles.hollow}>Войти</Link>
