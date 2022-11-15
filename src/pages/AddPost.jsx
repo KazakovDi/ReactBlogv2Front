@@ -16,7 +16,6 @@ const AddPost = () => {
     const imageRef = React.useRef(null)
     const titleRef = React.useRef("")
     const tagsRef = React.useRef("")
-    const [text, setText] = React.useState("")
     const [imageUrl, setImageUrl] = React.useState(useSelector(state=> state.post.data?.imageUrl) || "")
     const isLoaded = useSelector(state=> {
       if(!state.post.data || state.post.data.length > 1)
@@ -24,17 +23,25 @@ const AddPost = () => {
       return true
     })
     let tags = ""
-    const {title} = useSelector(state=> {
-      if(!isLoaded) {
-        return {
-          title:""
-        }
-      } else {
-          tags = state.post.data.tags.map(tag=> tag.body).join(",")
-          setText(state.post.data.text)
-          return state.post.data
-      }
+    const text = useSelector(state=> {
+        if(isLoaded) {
+          tags = state.post.data[0].tags.map(tag=> tag.body).join(",")
+          return state.post.data[0].text
+        }  
     })
+    const title = useSelector(state=> {
+      if(isLoaded)
+        return state.post.data[0].text
+    })
+    // React.useEffect(()=> {})
+    // const [text, setText] = React.useState(useSelector(state=> {
+    //   if(isLoaded) {
+    //     console.log(state.post.data[0].text)
+    //     return state.post.data[0].text
+    //   }
+   
+    //   }))
+      console.log(text)
     const dispatch = useDispatch()
     React.useEffect(()=> {
       if(isEditing)
@@ -110,7 +117,7 @@ const AddPost = () => {
               <input className={styles.tagsField} placeholder="Теги" ref={tagsRef} defaultValue={tags}/>
             </div>
             <input onChange={event=> {uploadImage(event)}} ref={imageRef} type="file" hidden/>
-            <SimpleMDE options={options} onChange={e => setText(e)} value={text}  />
+            <SimpleMDE options={options} value={text}  />
             <input onClick={onSubmitHandler} type="submit"  value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>
