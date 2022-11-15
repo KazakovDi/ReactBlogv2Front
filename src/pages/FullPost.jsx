@@ -32,6 +32,7 @@ const FullPost = () => {
           text={data.text}
           user={data.user}
           comments={data.comments}
+          viewsCount={data.viewsCount}
           _id={data._id}
           isFullPost={true}
           onRemovePost={onRemovePost}
