@@ -13,24 +13,25 @@ const AddPost = () => {
     const navigate = useNavigate()
     const {id} = useParams()
     const isEditing = Boolean(id)
-    const inputRef = React.useRef(null)
+    const imageRef = React.useRef(null)
+    const titleRef = React.useRef("")
+    const tagsRef = React.useRef("")
+    const [text, setText] = React.useState("")
     const [imageUrl, setImageUrl] = React.useState(useSelector(state=> state.post.data?.imageUrl) || "")
     const isLoaded = useSelector(state=> {
-      if(state.post.data === null || state.post.data === undefined || state.post.data.length > 1)
+      if(!state.post.data || state.post.data.length > 1)
         return false
       return true
     })
-    console.log("isLoaded", isLoaded)
     let tags = ""
-    const {title, text} = useSelector(state=> {
+    const {title} = useSelector(state=> {
       if(!isLoaded) {
         return {
-          title:"",
-          text:""
+          title:""
         }
       } else {
-          console.log("else", state.post.data)
           tags = state.post.data.tags.map(tag=> tag.body).join(",")
+          setText(state.post.data.text)
           return state.post.data
       }
     })
@@ -54,16 +55,15 @@ const AddPost = () => {
       );
       const removeImg = ()=> {
         setImageUrl("")
-        inputRef.current.value = ""
+        imageRef.current.value = ""
       }
       const onSubmitHandler = async () => {
         const fields = {
-            title,
-            tags: tags.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
+            title: titleRef.current.value,
+            tags: tagsRef.current.value.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
             text,
             imageUrl
         }
-        console.log(fields)
         try {
           const {data} = isEditing
           ? await axios.patch(`/posts/${id}/edit`, fields)
@@ -89,7 +89,7 @@ const AddPost = () => {
   return (
     <div className="container">
         <Paper style={{ padding: 30 }}>
-            <Button className={styles.addBtn} onClick={()=> {inputRef.current.click()}} variant="outlined" size="large">
+            <Button className={styles.addBtn} onClick={()=> {imageRef.current.click()}} variant="outlined" size="large">
                 Загрузить фото
             </Button>
             {imageUrl && (
@@ -104,14 +104,14 @@ const AddPost = () => {
                 </>
             )}
             <div>
-              <input className={styles.titleField} placeholder="Название"  value={title} />
+              <input className={styles.titleField} placeholder="Название" ref={titleRef} defaultValue={title} />
             </div>
             <div>
-              <input className={styles.tagsField} placeholder="Теги" value={tags}/>
+              <input className={styles.tagsField} placeholder="Теги" ref={tagsRef} defaultValue={tags}/>
             </div>
-            <input onChange={event=> {uploadImage(event)}} ref={inputRef} type="file" hidden/>
-            <SimpleMDE options={options} value={text}  />
-            <input onClick={onSubmitHandler} type="submit" value={!isEditing ? "Создать" : "Обновить"}/>
+            <input onChange={event=> {uploadImage(event)}} ref={imageRef} type="file" hidden/>
+            <SimpleMDE options={options} onChange={e => setText(e)} value={text}  />
+            <input onClick={onSubmitHandler} type="submit"  value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>
            

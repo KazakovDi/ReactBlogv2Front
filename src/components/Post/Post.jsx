@@ -13,7 +13,6 @@ import styles from "./Post.module.scss"
   const dispatch = useDispatch()
   const date = new Date(props.user?.createdAt)
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    // const [comment, setComment] = React.useState("")
     const addComment = async ()=> {
       await axios.post(`/createComment/${props._id}`, {text:commentRef.current.value})
       dispatch(fetchSinglePost(props._id))

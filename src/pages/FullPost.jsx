@@ -1,23 +1,21 @@
 import React from 'react'
 import {useDispatch, useSelector} from "react-redux"
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchSinglePost, setPostError, clearErrors, fetchDeletePost } from '../Redux/slices/postSlice';
+import { fetchSinglePost, fetchDeletePost } from '../Redux/slices/postSlice';
 import Post from "../components/Post/Post"
 const FullPost = () => {
-    const [comment, setComment] = React.useState()
     const error = useSelector(state=> state.post.error)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const data = useSelector(state => state.post.data)
-    const isLoaded = useSelector(state => Boolean(state.post.data))
+    const data = useSelector(state => {
+      if(state.post.data) return state.post.data[0]
+      return null
+    })
+    const isLoaded = useSelector(state => !!state.post.data)
     const {id} = useParams()
     React.useEffect(()=> {
             dispatch(fetchSinglePost(id))
-            .then(res=> {
-              if("error" in res) {
-              }
-            })
-    }, [comment])
+    }, [])
     const onRemovePost = id => {
         dispatch(fetchDeletePost({sortProps: "createdAt", id}))
         navigate('/')
@@ -36,7 +34,6 @@ const FullPost = () => {
           comments={data.comments}
           _id={data._id}
           isFullPost={true}
-          setComment={setComment}
           onRemovePost={onRemovePost}
         />
       ) : (

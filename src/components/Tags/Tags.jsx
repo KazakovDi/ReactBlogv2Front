@@ -12,7 +12,6 @@ import { selectIsTagsLoaded,fetchTags, selectTags } from '../../Redux/slices/tag
   const error = useSelector(state=> state.tag.error)
   React.useEffect(()=> {
     dispatch(fetchTags())
-    .then(res=> console.log("res", res))
   }, [])
   if(error)
     return <div className='errorBlock'>{error}</div>

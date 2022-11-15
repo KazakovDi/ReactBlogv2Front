@@ -4,9 +4,7 @@ import Skeleton from '../Post/Skeleton'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchPosts, fetchDeletePost } from '../../Redux/slices/postSlice'
  const Feed = () => {
-  const isLoaded = useSelector(state=> {
-    if(state.post.data && state.post.data.length > 1) return true
-  })
+  const isLoaded = useSelector(state=> !!state.post.data)
   const {sortProps, searchProps} = useSelector(state=> state.post.filter)
   const dispatch = useDispatch()
   const data = useSelector(state=> state.post.data)
