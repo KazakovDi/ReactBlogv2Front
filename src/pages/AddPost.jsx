@@ -16,12 +16,23 @@ const AddPost = () => {
     const imageRef = React.useRef(null)
     const titleRef = React.useRef("")
     const tagsRef = React.useRef("")
-    const [imageUrl, setImageUrl] = React.useState(useSelector(state=> state.post.data?.imageUrl) || "")
     const isLoaded = useSelector(state=> {
       if(!state.post.data || state.post.data.length > 1)
         return false
       return true
     })
+    const image = useSelector(state=> {
+      if(isLoaded)
+        return state.post.data[0].imageUrl
+    })
+    const [imageUrl, setImageUrl] = React.useState("")
+    React.useEffect(()=> {
+      if(image) {
+        setImageUrl(image)
+        console.log("[eq")
+      }
+    }, [image])
+    console.log("imageUrl", imageUrl)
     let tags = ""
     const text = useSelector(state=> {
         if(isLoaded) {
@@ -33,14 +44,6 @@ const AddPost = () => {
       if(isLoaded)
         return state.post.data[0].text
     })
-    // React.useEffect(()=> {})
-    // const [text, setText] = React.useState(useSelector(state=> {
-    //   if(isLoaded) {
-    //     console.log(state.post.data[0].text)
-    //     return state.post.data[0].text
-    //   }
-   
-    //   }))
       console.log(text)
     const dispatch = useDispatch()
     React.useEffect(()=> {
