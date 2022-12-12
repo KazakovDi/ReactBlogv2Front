@@ -34,17 +34,18 @@ const AddPost = () => {
     }, [image])
     console.log("imageUrl", imageUrl)
     let tags = ""
-    const text = useSelector(state=> {
+    const [text, setText] = React.useState(useSelector(state=> {
         if(isLoaded) {
           tags = state.post.data[0].tags.map(tag=> tag.body).join(",")
           return state.post.data[0].text
         }  
-    })
+    }))
+    console.log(text)
     const title = useSelector(state=> {
       if(isLoaded)
-        return state.post.data[0].text
+        return state.post.data[0].title
     })
-      console.log(text)
+
     const dispatch = useDispatch()
     React.useEffect(()=> {
       if(isEditing)
@@ -63,17 +64,22 @@ const AddPost = () => {
         }),
         [],
       );
+      const onChange = React.useCallback((value) => {
+        setText(value);
+      }, []);
       const removeImg = ()=> {
         setImageUrl("")
         imageRef.current.value = ""
       }
       const onSubmitHandler = async () => {
+        console.log(text, "text")
         const fields = {
             title: titleRef.current.value,
             tags: tagsRef.current.value.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
             text,
             imageUrl
         }
+        console.log(imageUrl)
         try {
           const {data} = isEditing
           ? await axios.patch(`/posts/${id}/edit`, fields)
@@ -120,7 +126,7 @@ const AddPost = () => {
               <input className={styles.tagsField} placeholder="Теги" ref={tagsRef} defaultValue={tags}/>
             </div>
             <input onChange={event=> {uploadImage(event)}} ref={imageRef} type="file" hidden/>
-            <SimpleMDE options={options} value={text}  />
+            <SimpleMDE onChange={onChange} options={options} defaultValue={text}  />
             <input onClick={onSubmitHandler} type="submit"  value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>
