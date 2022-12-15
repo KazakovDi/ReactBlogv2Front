@@ -79,7 +79,6 @@ const AddPost = () => {
             text,
             imageUrl
         }
-        console.log(imageUrl)
         try {
           const {data} = isEditing
           ? await axios.patch(`/posts/${id}/edit`, fields)
@@ -97,7 +96,6 @@ const AddPost = () => {
             console.log(file)
             formData.append("image", file)
             const {data} = await axios.post("/uploadImage", formData)
-            console.log(data)
             setImageUrl(data.url)
           } catch(err) {
             console.warn(err)
@@ -116,7 +114,7 @@ const AddPost = () => {
                         Убрать фото
                     </Button>
                     <div className={styles.preview}>
-                      <img  src={`https://${process.env.REACT_APP_API_URL}${imageUrl}`} />
+                      <img  src={`http://localhost:5000${imageUrl}`} />
                     </div>
                     <div></div>
                 </>
