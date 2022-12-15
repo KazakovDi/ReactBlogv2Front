@@ -114,7 +114,7 @@ const AddPost = () => {
                         Убрать фото
                     </Button>
                     <div className={styles.preview}>
-                      <img  src={`http://localhost:5000${imageUrl}`} />
+                      <img  src={`https://nervous-school-uniform-duck.cyclic.app${imageUrl}`} />
                     </div>
                     <div></div>
                 </>
