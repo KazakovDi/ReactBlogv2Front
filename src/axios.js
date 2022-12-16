@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const instance = axios.create({
-    baseURL: "https://nervous-school-uniform-duck.cyclic.app"
+    baseURL: "https://blogged.onrender.com"
 })
 // "http://localhost:5000"
 //https://nervous-school-uniform-duck.cyclic.app
