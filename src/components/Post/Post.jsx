@@ -30,7 +30,7 @@ import styles from "./Post.module.scss"
         </>
       ) : (<></>)}
       {!props.imageUrl ? (<></>) : (
-        <img className={styles.coverImg} src={`https://nervous-school-uniform-duck.cyclic.app${props.imageUrl}`} />
+        <img className={styles.coverImg} src={`https://blogged.onrender.com${props.imageUrl}`} />
       )}
       <div className={styles.user}>
         <img className={styles.avatar} src={props.user?.avatarUrl}/>
