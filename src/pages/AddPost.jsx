@@ -98,7 +98,7 @@ const AddPost = () => {
             const {data} = await axios.post("/uploadImage", formData)
             setImageUrl(data.url)
           } catch(err) {
-            console.warn(err)
+            console.warn("err", err)
             alert("Не удалось загрузить файл")
           }
       }
