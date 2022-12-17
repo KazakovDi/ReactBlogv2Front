@@ -10,6 +10,7 @@ import styles from "./AddPost.module.scss"
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSinglePost } from '../Redux/slices/postSlice';
 const AddPost = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const {id} = useParams()
     const isEditing = Boolean(id)
@@ -27,30 +28,20 @@ const AddPost = () => {
     })
     const [imageUrl, setImageUrl] = React.useState("")
     React.useEffect(()=> {
-      if(image) {
-        setImageUrl(image)
-        console.log("[eq")
-      }
-    }, [image])
-    console.log("imageUrl", imageUrl)
-    let tags = ""
-    const [text, setText] = React.useState(useSelector(state=> {
-        if(isLoaded) {
-          tags = state.post.data[0].tags.map(tag=> tag.body).join(",")
-          return state.post.data[0].text
-        }  
-    }))
-    console.log(text)
-    const title = useSelector(state=> {
-      if(isLoaded)
-        return state.post.data[0].title
-    })
-
-    const dispatch = useDispatch()
-    React.useEffect(()=> {
-      if(isEditing)
-        dispatch(fetchSinglePost(id))
+      dispatch(fetchSinglePost(id))
     }, [])
+    React.useEffect(()=> {
+      if(image)
+        setImageUrl(image)
+    }, [image])
+    let tags = ""
+    const {text, title} = useSelector(state=> {
+      if(isLoaded) {
+        tags = state.post.data[0].tags.map(tag=> tag.body).join(",")
+        return state.post.data[0]
+      } 
+      return ""
+    })
       const options = React.useMemo(
         () => ({
           spellChecker: false,
@@ -64,15 +55,11 @@ const AddPost = () => {
         }),
         [],
       );
-      const onChange = React.useCallback((value) => {
-        setText(value);
-      }, []);
       const removeImg = ()=> {
         setImageUrl("")
         imageRef.current.value = ""
       }
       const onSubmitHandler = async () => {
-        console.log(text, "text")
         const fields = {
             title: titleRef.current.value,
             tags: tagsRef.current.value.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
@@ -126,7 +113,7 @@ const AddPost = () => {
               <input className={styles.tagsField} placeholder="Теги" ref={tagsRef} defaultValue={tags}/>
             </div>
             <input onChange={event=> {uploadImage(event)}} ref={imageRef} type="file" hidden/>
-            <SimpleMDE onChange={onChange} options={options} defaultValue={text}  />
+            <SimpleMDE options={options} value={text}  />
             <input onClick={onSubmitHandler} type="submit"  value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>

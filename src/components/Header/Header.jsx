@@ -28,6 +28,7 @@ import styles from "./Header.module.scss"
             const file = event.target.files[0]
             formData.append("image", file)
             const {data} = await axios.post("/uploadImage", formData)
+            console.log(data.url)
             await axios.post("/auth/changeAvatar", {avatarUrl: data.url})
             setAvatar(data.url)
             dispatch(fetchPosts({sortProps: "createdAt"}))
