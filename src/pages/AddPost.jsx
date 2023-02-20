@@ -17,6 +17,7 @@ const AddPost = () => {
     const imageRef = React.useRef(null)
     const titleRef = React.useRef("")
     const tagsRef = React.useRef("")
+    const [value, setValue] = React.useState("")
     const isLoaded = useSelector(state=> {
       if(!state.post.data || state.post.data.length > 1)
         return false
@@ -35,6 +36,9 @@ const AddPost = () => {
       if(image)
         setImageUrl(image)
     }, [image])
+    const onChange = React.useCallback((value) => {
+      setValue(value);
+    }, []);
     let tags = ""
     const {text, title} = useSelector(state=> {
       if(isLoaded) {
@@ -43,6 +47,7 @@ const AddPost = () => {
       } 
       return ""
     })
+    
       const options = React.useMemo(
         () => ({
           spellChecker: false,
@@ -64,9 +69,12 @@ const AddPost = () => {
         const fields = {
             title: titleRef.current.value,
             tags: tagsRef.current.value.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ' ').replace(/\s{2,}/g," ").split(' '),
-            text,
             imageUrl
         }
+        if(text)
+          fields.text = text
+        else
+          fields.text = value
         try {
           const {data} = isEditing
           ? await axios.patch(`/posts/${id}/edit`, fields)
@@ -114,7 +122,7 @@ const AddPost = () => {
               <input className={styles.tagsField} placeholder="Теги" ref={tagsRef} defaultValue={tags}/>
             </div>
             <input onChange={event=> {uploadImage(event)}} ref={imageRef} type="file" hidden/>
-            <SimpleMDE options={options} value={text}  />
+            <SimpleMDE options={options} value={text} onChange={onChange} />
             <input onClick={onSubmitHandler} type="submit"  value={!isEditing ? "Создать" : "Обновить"}/>
         </Paper>  
     </div>

@@ -6,6 +6,7 @@ import { fetchAuthMe } from '../../Redux/slices/authSlice'
 import { fetchPosts } from '../../Redux/slices/postSlice'
 import axios from "../../axios"
 import { logout } from '../../Redux/slices/authSlice'
+import Popup from '../Popup/Popup'
 import styles from "./Header.module.scss"
 
  const Header = () => {
@@ -37,7 +38,8 @@ import styles from "./Header.module.scss"
           }
       }
   return (
-        <div className='container'>
+    <div className='container'>
+        <Popup />
             <div className={styles.navbar}>
                 <Link className={styles.logo}to="/" >Blogged</Link>
                 {!isAuth ? (
