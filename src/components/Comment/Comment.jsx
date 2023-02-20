@@ -1,18 +1,21 @@
 import React from 'react'
 
 import styles from "../Post/Post.module.scss"
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchUser } from '../../Redux/slices/authSlice'
+
+import axios from '../../axios'
  const Comment = ({text, id}) => {
-  
-  const dispatch = useDispatch()
-  const user = useSelector(state=> state.auth.data)
-  const isLoaded = useSelector(state=> !!state.auth.data)
-  React.useEffect(()=> { dispatch(fetchUser({id})) },[])
+  const [user, setUser] = React.useState(null)
+  React.useEffect(()=> { 
+    async function fetch() {
+      const {data} = await axios.get(`/auth/${id}`)
+      setUser(data)
+    }
+    fetch()
+  },[])
   return (
     <div className={styles.comment}>
       <div className={styles.user}>
-        {isLoaded && 
+        {user && 
           <>
             <img className={styles.avatar} alt={"Avatar"} src={user.avatarUrl}/>
             <div>

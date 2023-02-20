@@ -28,7 +28,8 @@ const AddPost = () => {
     })
     const [imageUrl, setImageUrl] = React.useState("")
     React.useEffect(()=> {
-      dispatch(fetchSinglePost(id))
+      if(id)
+        dispatch(fetchSinglePost(id))
     }, [])
     React.useEffect(()=> {
       if(image)
